@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --bg-dark: #000000;
+  --bg-panel: #111111;
+  
+  --text-main: #ffffff;
+  --text-muted: #888888;
+  
+  --primary: #ffffff;
+  --accent: #dddddd;
+  
+  /* Fonts */
+  --font-heading: 'Rajdhani', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Minimalist Button - SpaceX Style with Smooth Curves */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--text-main);
+  background: transparent;
+  color: var(--text-main);
+  border-radius: 8px; /* Slight curve */
+}
+
+.btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--bg-dark);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.btn-sidebar {
+  border: none !important;
+  background: transparent;
+  color: var(--text-main);
+}
+
+.btn-sidebar:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-main) !important;
+  box-shadow: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  /* Same as base button for this theme */
+}
+
+/* Form Inputs */
+.input-minimal {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--text-muted);
+  padding: 12px 0;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 16px;
+  outline: none;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-minimal:focus {
+  border-bottom-color: var(--text-main);
+  background: rgba(255,255,255,0.05);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Utility */
+.uppercase { text-transform: uppercase; }
+.tracking-wide { letter-spacing: 2px; }
+.tracking-wider { letter-spacing: 4px; }

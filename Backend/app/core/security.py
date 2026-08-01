@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.core.database import SessionLocal
 from app.core.models import User
@@ -13,14 +13,17 @@ SECRET_KEY = "super-secret-celestic-key-change-in-production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# 2. Standard Passlib Bcrypt Password Hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+# 2. Standard Bcrypt Password Hashing (Direct, no passlib bugs)
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    pwd_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(pwd_bytes, salt)
+    return hashed_password.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    password_byte_enc = plain_password.encode('utf-8')
+    hashed_password_byte_enc = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_byte_enc, hashed_password_byte_enc)
 
 # 3. JWT Token Creation
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):

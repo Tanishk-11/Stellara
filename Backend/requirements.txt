@@ -15,4 +15,4 @@ PyJWT
 python-multipart
 passlib[bcrypt]
 bcrypt
-stripe
+razorpay
