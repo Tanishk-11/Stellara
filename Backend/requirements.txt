@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic[email]
+python-dotenv
+tensorflow-cpu==2.16.1
+langchain
+langchain-groq
+langgraph
+feedparser
+skyfield
+Pillow
+PyJWT
+python-multipart
+pwdlib[argon2]
+pyjwt
