@@ -13,5 +13,6 @@ skyfield
 Pillow
 PyJWT
 python-multipart
-pwdlib[argon2]
-pyjwt
+passlib[bcrypt]
+bcrypt
+stripe

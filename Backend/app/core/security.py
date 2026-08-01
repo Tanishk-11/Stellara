@@ -3,7 +3,7 @@ from typing import Optional
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from pwdlib import PasswordHash
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.core.database import SessionLocal
 from app.core.models import User
@@ -13,14 +13,14 @@ SECRET_KEY = "super-secret-celestic-key-change-in-production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# 2. Modern Argon2 Password Hashing (No bcrypt/passlib bugs!)
-password_hash = PasswordHash.recommended()
+# 2. Standard Passlib Bcrypt Password Hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:
-    return password_hash.hash(password)
+    return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return password_hash.verify(plain_password, hashed_password)
+    return pwd_context.verify(plain_password, hashed_password)
 
 # 3. JWT Token Creation
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):

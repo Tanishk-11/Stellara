@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 
 # Import your newly built routers!
-from app.api import auth, chat, image
+from app.api import auth, chat, image, payment
 
 # 1. Tell SQLAlchemy to build the actual tables in PostgreSQL 
 # (It will only create them if they don't already exist)
@@ -33,6 +33,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/chat", tags=["AI Chat"])
 app.include_router(image.router, prefix="/api/vision", tags=["Computer Vision"])
+app.include_router(payment.router, prefix="/api/payment", tags=["Payments"])
 
 @app.get("/")
 def root():

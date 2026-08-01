@@ -11,7 +11,15 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BSP_FILE = os.path.join(BASE_DIR, "de421.bsp")
 
-planets_data = load(BSP_FILE)
+try:
+    if os.path.exists(BSP_FILE):
+        planets_data = load(BSP_FILE)
+    else:
+        print(f"WARNING: {BSP_FILE} not found. Skyfield will attempt to download it.")
+        planets_data = load('de421.bsp')
+except Exception as e:
+    print(f"CRITICAL: Error loading astronomy data: {e}")
+    planets_data = None
 ts = load.timescale()
 
 # The "Anchor Stars" for your 8 constellations.
@@ -45,6 +53,9 @@ def get_sky_data(latitude: float, longitude: float):
     Returns a complete snapshot of the sky for the Agent.
     Includes: Visible Planets, Sun/Moon, and Visible Constellations.
     """
+    if planets_data is None:
+        return {"error": "Astronomy Data (de421.bsp) not loaded."}
+
     t = ts.now()
     earth = planets_data["earth"]
     observer = earth + wgs84.latlon(latitude, longitude)
