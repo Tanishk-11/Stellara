@@ -4,6 +4,7 @@ sqlalchemy
 psycopg2-binary
 pydantic[email]
 python-dotenv
+numpy<2
 tflite-runtime
 langchain
 langchain-groq
