@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from typing import Optional
 from sqlalchemy.orm import Session
 import shutil
 import os
@@ -26,6 +27,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 @router.post("/detect")
 def detect_constellation(
     file: UploadFile = File(...), 
+    lat: Optional[float] = Form(None),
+    lon: Optional[float] = Form(None),
     current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
@@ -38,7 +41,8 @@ def detect_constellation(
             shutil.copyfileobj(file.file, buffer)
             
         # STEP 3: Ask the Agent to analyze the image AND check sky visibility
-        prompt = f"I just uploaded an image to my sensors at {file_path}. Please use your predict_constellation tool to analyze it. After you get the results, check if that constellation is actually visible right now (ask for my location if you don't have it). Give me your final analysis!"
+        location_str = f"My location is Latitude: {lat}, Longitude: {lon}." if lat and lon else "I do not have my location available."
+        prompt = f"I just uploaded an image to my sensors at {file_path}. Please use your predict_constellation tool to analyze it. After you get the results, check if that constellation is actually visible right now ({location_str}). Give me your final analysis!"
         
         agent_response = ask_stargazer(
             user_message=prompt, 

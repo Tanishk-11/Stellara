@@ -142,12 +142,26 @@ const Dashboard = () => {
     }
   };
 
+  const getUserLocation = () => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve({ lat: null, lon: null });
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve({ lat: position.coords.latitude, lon: position.coords.longitude }),
+        (error) => resolve({ lat: null, lon: null })
+      );
+    });
+  };
+
   const handleAnalyzeImage = async () => {
     if (!selectedImage) return;
     setVisionLoading(true);
     
     try {
-      const res = await visionAPI.detectConstellation(selectedImage);
+      const { lat, lon } = await getUserLocation();
+      const res = await visionAPI.detectConstellation(selectedImage, lat, lon);
       setVisionResult(res.data.predictions);
     } catch (err) {
       setVisionResult("ERROR ANALYZING TELEMETRY DATA.");
@@ -166,7 +180,8 @@ const Dashboard = () => {
     setChatLoading(true);
 
     try {
-      const res = await chatAPI.sendMessage(userMsg);
+      const { lat, lon } = await getUserLocation();
+      const res = await chatAPI.sendMessage(userMsg, lat, lon);
       setMessages(prev => [...prev, { role: 'agent', content: res.data.message }]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'agent', content: 'SYSTEM ERROR: CONNECTION TO STARGAZER LOST.' }]);

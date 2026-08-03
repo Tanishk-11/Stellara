@@ -32,13 +32,17 @@ export const authAPI = {
 };
 
 export const chatAPI = {
-  sendMessage: (msg) => api.post('/chat/chat', { msg }),
+  sendMessage: (msg, lat, lon) => api.post('/chat/chat', { msg, lat, lon }),
 };
 
 export const visionAPI = {
-  detectConstellation: (file) => {
+  detectConstellation: (file, lat, lon) => {
     const formData = new FormData();
     formData.append('file', file);
+    if (lat !== null && lon !== null) {
+      formData.append('lat', lat);
+      formData.append('lon', lon);
+    }
     return api.post('/vision/detect', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
