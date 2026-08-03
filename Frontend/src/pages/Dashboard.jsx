@@ -124,10 +124,9 @@ const Dashboard = () => {
           setVisionLoading(false);
           return;
         }
-        // Send blob to API
-        const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+        // Send blob to API directly
         try {
-          const res = await visionAPI.detectConstellation(file, lat, lon);
+          const res = await visionAPI.detectConstellation(blob, lat, lon);
           setVisionResult(res.data.predictions);
         } catch (err) {
           setVisionResult("ERROR ANALYZING TELEMETRY DATA.");

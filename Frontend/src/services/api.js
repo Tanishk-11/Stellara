@@ -38,8 +38,8 @@ export const chatAPI = {
 export const visionAPI = {
   detectConstellation: (file, lat, lon) => {
     const formData = new FormData();
-    formData.append('file', file);
-    if (lat !== null && lon !== null) {
+    formData.append('file', file, file.name || 'capture.jpg');
+    if (lat !== null && lon !== null && lat !== undefined && lon !== undefined) {
       formData.append('lat', lat);
       formData.append('lon', lon);
     }
