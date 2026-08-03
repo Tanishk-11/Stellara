@@ -39,7 +39,7 @@ export const visionAPI = {
   detectConstellation: (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post('/image/detect', formData, {
+    return api.post('/vision/detect', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
