@@ -124,3 +124,14 @@ h1, h2, h3, h4, h5, h6 {
 .uppercase { text-transform: uppercase; }
 .tracking-wide { letter-spacing: 2px; }
 .tracking-wider { letter-spacing: 4px; }
+
+/* Loader Animation */
+.lucide-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

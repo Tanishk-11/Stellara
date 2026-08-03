@@ -9,6 +9,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "celestic_v2_model.tflite")
 
 # Load model globally so it only boots up once when the server starts
+load_error = None
 try:
     print(f"Loading Vision Model from: {MODEL_PATH}")
     interpreter = tflite.Interpreter(model_path=MODEL_PATH)
@@ -17,6 +18,7 @@ try:
     output_details = interpreter.get_output_details()
 except Exception as e:
     print(f"CRITICAL: Error loading model: {e}")
+    load_error = str(e)
     interpreter = None
 
 CLASS_NAMES = [
@@ -36,7 +38,7 @@ def predict_constellation(image_path: str) -> dict:
     Analyzes an image and returns confidence scores for ALL constellations.
     """
     if interpreter is None:
-        return {"error": "Vision Model not loaded."}
+        return {"error": f"Vision Model failed to load: {load_error}"}
 
     try:
         if not os.path.exists(image_path):

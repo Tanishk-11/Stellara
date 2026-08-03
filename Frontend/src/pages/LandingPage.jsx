@@ -205,17 +205,6 @@ const LandingPage = () => {
                     </span>
                   </p>
 
-                  <button 
-                    type="button" 
-                    className="btn" 
-                    style={{ marginTop: '40px', borderStyle: 'dashed' }}
-                    onClick={() => {
-                      localStorage.setItem('token', 'debug_bypass_token');
-                      navigate('/dashboard');
-                    }}
-                  >
-                    BYPASS LOGIN (DEBUG)
-                  </button>
                 </form>
               </div>
             </motion.div>

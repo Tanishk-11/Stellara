@@ -37,7 +37,7 @@ def create_order(current_user: User = Depends(get_current_user)):
             "notes": {
                 "user_id": current_user.id,
                 "email": current_user.email
-            }
+            } 
         }
         order = client.order.create(data=data)
         
