@@ -50,14 +50,30 @@ def detect_constellation(
             user_name=current_user.name
         )
         
-        # STEP 4: Save to Database
+        # STEP 4: Upload to Cloudinary for permanent storage (Premium Feature)
+        cloud_url = file_path # Fallback to local ephemeral path for free users
+        try:
+            import cloudinary
+            import cloudinary.uploader
+            
+            # TODO: In the future, replace this with: is_premium_user = current_user.is_premium
+            is_premium_user = False 
+            
+            # Only upload to premium cloud storage if they are a premium user and the URL is set
+            if os.getenv("CLOUDINARY_URL") and is_premium_user:
+                upload_result = cloudinary.uploader.upload(file_path)
+                cloud_url = upload_result.get("secure_url", file_path)
+        except Exception as e:
+            print(f"Cloudinary upload failed: {e}")
+
+        # STEP 5: Save to Database
         new_image_record = ConstellationImage(
             user_id=current_user.id, 
-            image_url=file_path, 
+            image_url=cloud_url, 
             detected_constellation=agent_response
         )
         
-        # STEP 5: Add, commit, refresh, and return!
+        # STEP 6: Add, commit, refresh, and return!
         db.add(new_image_record)
         db.commit()
         db.refresh(new_image_record)
@@ -65,7 +81,8 @@ def detect_constellation(
         return {
             "message": "Image successfully analyzed by Stargazer",
             "predictions": agent_response,
-            "database_id": new_image_record.id
+            "database_id": new_image_record.id,
+            "cloud_url": cloud_url
         }
 
     except Exception as e:
