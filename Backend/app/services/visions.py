@@ -1,20 +1,23 @@
 import os
-import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing import image
+import tflite_runtime.interpreter as tflite
+from PIL import Image
 from langchain.tools import tool
 
 # Set absolute path relative to this exact file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "celestic_v2_model.keras")
+MODEL_PATH = os.path.join(BASE_DIR, "celestic_v2_model.tflite")
 
 # Load model globally so it only boots up once when the server starts
 try:
     print(f"Loading Vision Model from: {MODEL_PATH}")
-    model = tf.keras.models.load_model(MODEL_PATH)
+    interpreter = tflite.Interpreter(model_path=MODEL_PATH)
+    interpreter.allocate_tensors()
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
 except Exception as e:
     print(f"CRITICAL: Error loading model: {e}")
-    model = None
+    interpreter = None
 
 CLASS_NAMES = [
     "CanisMajor",
@@ -32,20 +35,22 @@ def predict_constellation(image_path: str) -> dict:
     """
     Analyzes an image and returns confidence scores for ALL constellations.
     """
-    if model is None:
+    if interpreter is None:
         return {"error": "Vision Model not loaded."}
 
     try:
         if not os.path.exists(image_path):
             return {"error": f"File not found at {image_path}"}
 
-        # Preprocessing
-        img = image.load_img(image_path, target_size=(256, 256))
-        img_array = image.img_to_array(img)
+        # Preprocessing without Keras
+        img = Image.open(image_path).convert('RGB').resize((256, 256))
+        img_array = np.array(img, dtype=np.float32)
         img_batch = np.expand_dims(img_array, axis=0)
 
-        # Predict
-        predictions = model.predict(img_batch)
+        # Predict using TFLite
+        interpreter.set_tensor(input_details[0]['index'], img_batch)
+        interpreter.invoke()
+        predictions = interpreter.get_tensor(output_details[0]['index'])
         scores = predictions[0]
 
         # Return Dictionary of scores
