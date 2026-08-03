@@ -22,7 +22,7 @@ app = FastAPI(
 # 3. Configure CORS (Security setting to allow frontend connections)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], 
+    allow_origins=["*"], # Allow all origins for the deployed frontend
     allow_credentials=True,
     allow_methods=["*"],  # Allows all HTTP methods (GET, POST, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers (like our JWT Authorization header)
