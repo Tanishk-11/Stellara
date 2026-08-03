@@ -259,16 +259,7 @@ const Dashboard = () => {
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ 
-          padding: '20px 40px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 10
-        }}
+        className="header-container"
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +276,7 @@ const Dashboard = () => {
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '15px' }}>
+        <div className="header-buttons">
           <motion.button 
             whileHover={{ scale: 1.05, boxShadow: '0px 0px 15px rgba(255,255,255,0.5)' }}
             whileTap={{ scale: 0.95 }}
@@ -302,23 +293,14 @@ const Dashboard = () => {
       </motion.header>
 
       {/* Main Layout */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, zIndex: 10 }}>
+      <div className="main-layout">
         
         {/* Sidebar */}
         <motion.div 
           initial="hidden"
           animate="show"
           variants={containerVariants}
-          style={{ 
-            width: '300px', 
-            borderRight: '1px solid rgba(255,255,255,0.1)', 
-            padding: '40px 20px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            backdropFilter: 'blur(5px)'
-          }}
+          className="sidebar"
         >
           <motion.button 
             variants={itemVariants}
@@ -366,7 +348,7 @@ const Dashboard = () => {
               transition={{ duration: 0.3 }}
               style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
             >
-                <div style={{ flex: 1, overflowY: 'auto', padding: '40px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                <div className="chat-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '30px' }}>
                   <AnimatePresence>
                     {messages.map((m, i) => (
                       <motion.div 
@@ -376,8 +358,7 @@ const Dashboard = () => {
                         animate="show"
                         style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}
                       >
-                        <div style={{ 
-                          maxWidth: '70%', 
+                        <div className="message-bubble" style={{ 
                           padding: '20px', 
                           backgroundColor: m.role === 'user' ? '#ffffff' : 'rgba(20,20,20,0.8)',
                           color: m.role === 'user' ? '#000000' : '#ffffff',
@@ -434,7 +415,8 @@ const Dashboard = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              style={{ padding: '60px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: '100%', overflowY: 'auto' }}
+              className="vision-container"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: '100%', overflowY: 'auto' }}
             >
                 <div style={{ marginBottom: '40px' }}>
                   <h3 style={{ fontSize: '32px', marginBottom: '10px' }}>CONSTELLATION TRACKER</h3>

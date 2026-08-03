@@ -60,7 +60,7 @@ const LandingPage = () => {
     }}>
       
       {/* Top Header / Watermark Logo */}
-      <header style={{ padding: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 10 }}>
+      <header className="landing-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 10 }}>
         {/* Sleek S Logo */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,11 +79,10 @@ const LandingPage = () => {
       </header>
 
       {/* Main Content Area */}
-      <div style={{ 
+      <div className="landing-content" style={{ 
         flex: 1, 
         display: 'flex', 
         alignItems: 'flex-end', 
-        padding: '80px 40px',
         position: 'relative',
         zIndex: 5
       }}>
@@ -138,12 +137,12 @@ const LandingPage = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.4 }}
+              className="auth-panel"
               style={{
                 width: '100%',
                 maxWidth: '500px',
                 height: '100%',
                 backgroundColor: 'var(--bg-panel)',
-                padding: '40px',
                 display: 'flex',
                 flexDirection: 'column'
               }}
