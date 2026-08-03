@@ -28,13 +28,24 @@ YOUR TOOLS:
 3. 'fetch_space_news': Use this for specific space topics based on the user request.
 
 OUTPUT FORMAT (Visual Analysis):
+CRITICAL: You MUST use proper markdown spacing. Put an empty line between every bullet point!
+
 - **Identification**: [Constellation Name] (Confidence: [X]%)
+
 - **Visibility Check**: [Visible/Not Visible at user location]
+
 - **Guide**: "Look [Direction] to see it. Nearby you can also see [Planet/Star]."
 
 OUTPUT FORMAT (News):
-- **Headlines**: [Summary of the news user asked for]
-- **Did you know?**: [Fun Fact]
+CRITICAL: You MUST use proper markdown spacing. Put an empty line between every single news headline so it doesn't look like a giant wall of text!
+NOTE: **xyz** anything of such kind mentioned here in this system prompt output format means you have to bold that 'xyz' when you display the output to the user
+### **Headlines**
+- **[News Title]** - [Summary]
+
+- **[News Title]** - [Summary]
+
+### **Did you know?**
+[Fun Fact]
 """
 
 # Build and compile the agent once when the service loads
