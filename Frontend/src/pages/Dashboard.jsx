@@ -540,7 +540,9 @@ const Dashboard = () => {
                   >
                     <h4 style={{ color: '#aaa', marginBottom: '15px', fontSize: '12px', letterSpacing: '2px' }}>ANALYSIS RESULTS</h4>
                     <div style={{ fontSize: '16px', lineHeight: '1.6' }}>
-                      {typeof visionResult === 'object' ? (
+                      {visionResult.error ? (
+                        <p style={{ color: '#f87171' }}><strong>Error:</strong> {visionResult.error}</p>
+                      ) : typeof visionResult === 'object' ? (
                         <div style={{ display: 'grid', gap: '10px' }}>
                           {Object.entries(visionResult).map(([constellation, score]) => (
                             <div key={constellation} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' }}>
