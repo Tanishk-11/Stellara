@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, MessageSquare, Camera, Crown, Send, Loader2, FlipHorizontal, Focus, UploadCloud } from 'lucide-react';
 import { chatAPI, visionAPI, paymentAPI } from '../services/api';
+import ReactMarkdown from 'react-markdown';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('chat');
@@ -373,7 +374,7 @@ const Dashboard = () => {
                           backdropFilter: m.role === 'agent' ? 'blur(10px)' : 'none'
                         }}>
                           {m.role === 'agent' && <div style={{ fontSize: '12px', color: '#aaaaaa', marginBottom: '8px', letterSpacing: '2px' }}>STARGAZER UPLINK</div>}
-                          {m.content}
+                          <ReactMarkdown>{m.content}</ReactMarkdown>
                         </div>
                       </motion.div>
                     ))}
@@ -538,7 +539,20 @@ const Dashboard = () => {
                     style={{ background: 'rgba(20,20,20,0.8)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.3)', padding: '30px', marginTop: '40px', width: '100%', maxWidth: '800px', backdropFilter: 'blur(10px)' }}
                   >
                     <h4 style={{ color: '#aaa', marginBottom: '15px', fontSize: '12px', letterSpacing: '2px' }}>ANALYSIS RESULTS</h4>
-                    <p style={{ fontSize: '16px', lineHeight: '1.6' }}>{visionResult}</p>
+                    <div style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                      {typeof visionResult === 'object' ? (
+                        <div style={{ display: 'grid', gap: '10px' }}>
+                          {Object.entries(visionResult).map(([constellation, score]) => (
+                            <div key={constellation} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' }}>
+                              <span style={{ fontWeight: 'bold' }}>{constellation}</span>
+                              <span style={{ color: score > 50 ? '#4ade80' : '#f87171' }}>{Number(score).toFixed(2)}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>{visionResult}</p>
+                      )}
+                    </div>
                   </motion.div>
                 )}
 
