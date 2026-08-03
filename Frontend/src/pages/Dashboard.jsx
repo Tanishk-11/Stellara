@@ -552,7 +552,9 @@ const Dashboard = () => {
                           ))}
                         </div>
                       ) : (
-                        <p>{visionResult}</p>
+                        <div className="markdown-body" style={{ color: '#e0e0e0' }}>
+                          <ReactMarkdown>{visionResult}</ReactMarkdown>
+                        </div>
                       )}
                     </div>
                   </motion.div>

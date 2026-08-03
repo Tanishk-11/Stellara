@@ -8,6 +8,7 @@ from app.core.database import SessionLocal
 from app.core.models import ConstellationImage, User
 from app.core.security import get_current_user
 from app.services.visions import predict_constellation
+from app.services.agent import ask_stargazer
 
 router = APIRouter()
 
@@ -36,16 +37,20 @@ def detect_constellation(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        # STEP 3: Pass the saved file path to your Computer Vision model
-        # Because we wrapped it as a LangChain @tool, we invoke it with a dictionary
-        predictions = predict_constellation.invoke({"image_path": file_path})
+        # STEP 3: Ask the Agent to analyze the image AND check sky visibility
+        prompt = f"I just uploaded an image to my sensors at {file_path}. Please use your predict_constellation tool to analyze it. After you get the results, check if that constellation is actually visible right now (ask for my location if you don't have it). Give me your final analysis!"
+        
+        agent_response = ask_stargazer(
+            user_message=prompt, 
+            session_id=str(current_user.id), 
+            user_name=current_user.name
+        )
         
         # STEP 4: Save to Database
-        # (We wrap predictions in str() just in case it returns a dictionary of scores)
         new_image_record = ConstellationImage(
             user_id=current_user.id, 
             image_url=file_path, 
-            detected_constellation=str(predictions)
+            detected_constellation=agent_response
         )
         
         # STEP 5: Add, commit, refresh, and return!
@@ -54,8 +59,8 @@ def detect_constellation(
         db.refresh(new_image_record)
         
         return {
-            "message": "Image successfully analyzed",
-            "predictions": predictions,
+            "message": "Image successfully analyzed by Stargazer",
+            "predictions": agent_response,
             "database_id": new_image_record.id
         }
 
