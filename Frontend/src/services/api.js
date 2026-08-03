@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Backend runs on 8080 according to the Docker config
-const API_URL = 'http://127.0.0.1:8080/api';
+// Use the environment variable if deployed, otherwise fallback to local backend
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8080/api';
 
 const api = axios.create({
   baseURL: API_URL,
