@@ -114,23 +114,32 @@ const Dashboard = () => {
     }
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Convert canvas to blob
-    canvas.toBlob(async (blob) => {
-      if (!blob) {
-        setVisionLoading(false);
-        return;
-      }
-      // Send blob to API
-      const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
-      try {
-        const res = await visionAPI.detectConstellation(file);
-        setVisionResult(res.data.predictions);
-      } catch (err) {
-        setVisionResult("ERROR ANALYZING TELEMETRY DATA.");
-      } finally {
-        setVisionLoading(false);
-      }
-    }, 'image/jpeg', 0.9);
+    try {
+      // Get location synchronously within the user gesture to prevent browser blocking
+      const { lat, lon } = await getUserLocation();
+      
+      // Convert canvas to blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          setVisionLoading(false);
+          return;
+        }
+        // Send blob to API
+        const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+        try {
+          const res = await visionAPI.detectConstellation(file, lat, lon);
+          setVisionResult(res.data.predictions);
+        } catch (err) {
+          setVisionResult("ERROR ANALYZING TELEMETRY DATA.");
+        } finally {
+          setVisionLoading(false);
+        }
+      }, 'image/jpeg', 0.9);
+      
+    } catch (err) {
+      setVisionResult("LOCATION SERVICES REQUIRED. PLEASE ALLOW LOCATION ACCESS.");
+      setVisionLoading(false);
+    }
   };
 
   const handleImageChange = (e) => {
