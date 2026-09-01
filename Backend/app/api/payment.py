@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
-# In production, make sure to add these to your .env file
+# In production, add these to .env file
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "rzp_test_placeholder")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "secret_placeholder")
 

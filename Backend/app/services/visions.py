@@ -2,7 +2,7 @@ import os
 import numpy as np
 import tflite_runtime.interpreter as tflite
 from PIL import Image
-from langchain.tools import tool
+from langchain.tools import tool 
 
 # Set absolute path relative to this exact file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

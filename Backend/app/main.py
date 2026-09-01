@@ -28,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers (like our JWT Authorization header)
 )
 
-# 4. Snap the Lego pieces (routers) onto the main app!
+# 4. Snap the  pieces (routers) onto the main app
 # The 'prefix' means all routes in auth.py will start with /api/auth (e.g., /api/auth/login)
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/chat", tags=["AI Chat"])

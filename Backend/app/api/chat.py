@@ -5,7 +5,7 @@ from pydantic import BaseModel
 # Internal imports
 from app.core.database import SessionLocal
 from app.core.models import ChatHistory, User
-from app.core.security import get_current_user  # <-- Use the bouncer!
+from app.core.security import get_current_user
 from app.services.agent import ask_stargazer
 
 # Pydantic schema to receive the text safely
@@ -24,7 +24,6 @@ def get_db():
     finally:
         db.close()
 
-# Changed to POST because we are sending data
 @router.post("/chat")
 def get_chat_data(request: ChatRequest, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     

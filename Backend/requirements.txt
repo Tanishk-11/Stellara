@@ -5,7 +5,7 @@ psycopg2-binary
 pydantic[email]
 python-dotenv
 numpy<2
-tflite-runtime
+tflite-runtime 
 langchain
 langchain-groq
 langgraph
@@ -17,3 +17,4 @@ python-multipart
 passlib[bcrypt]
 bcrypt
 razorpay
+cloudinary

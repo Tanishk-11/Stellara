@@ -87,3 +87,7 @@ def detect_constellation(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process image: {str(e)}")
+    finally:
+        # NEW: Delete the temporary file if it exists
+        if os.path.exists(file_path): 
+            os.remove(file_path)
