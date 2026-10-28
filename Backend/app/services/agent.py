@@ -7,7 +7,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from langchain.agents import create_agent
 from langchain_groq import ChatGroq
-from langgraph.checkpoint.memory import InMemorySaver
+# NOTE: InMemorySaver (LangGraph checkpointer) is intentionally NOT used here.
+# History is managed explicitly from PostgreSQL in chat.py to prevent context bloat.
+# Using both InMemorySaver AND DB history caused duplicate messages and 413 token errors.
 
 # Import your tools directly from the service layer
 from astronomy import get_sky_data
@@ -51,37 +53,44 @@ NOTE: **xyz** anything of such kind mentioned here in this system prompt output 
 # Build and compile the agent once when the service loads
 llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 tools = [get_sky_data, fetch_space_news, predict_constellation]
-memory = InMemorySaver()
-
 stargazer_agent = create_agent(
     model=llm,
     tools=tools,
-    checkpointer=memory,
+    # No checkpointer: history is injected explicitly from the DB on every call.
+    # This prevents the double-history context bloat that caused 413 errors.
     system_prompt=SYSTEM_PROMPT,
 )
 
-def ask_stargazer(user_message: str, session_id: str, past_history: list = None, user_name: str = "Explorer") -> str:
+def ask_stargazer(user_message: str, session_id: str, history_summary: str = "", user_name: str = "Explorer") -> str:
     """
-    Accepts the current message, the session ID, and the database history.
+    Calls the Stargazer agent with:
+      - A persona system message (user name personalisation)
+      - A compact history summary system message (~150 tokens, pre-built by summarizer.py)
+      - The current user message only
+
+    This replaces the previous raw-history injection which caused context bloat.
     """
-    config = {"configurable": {"thread_id": session_id}}
-    
-    # 1. Inject the personalized user context
+    config = {}
+
+    # 1. Persona context
     messages = [
         ("system", f"You are currently speaking with {user_name}. Personalize your responses to them.")
     ]
-    
-    # 2. Load the PostgreSQL history (passed in from the FastAPI router)
-    if past_history:
-        messages.extend(past_history)
-        
-    # 3. Add the brand new user message
+
+    # 2. Inject the pre-summarized history as a single system message.
+    #    This is always ≤ 150 tokens — enforced by the summarizer LLM's max_tokens.
+    if history_summary:
+        messages.append(
+            ("system", f"Summary of the conversation so far:\n{history_summary}")
+        )
+
+    # 3. Add only the current user message (no raw history tuples)
     messages.append(("user", user_message))
-    
+
     # 4. Run the agent
     response = stargazer_agent.invoke({"messages": messages}, config)
-    
+
     if "messages" in response and response["messages"]:
         return response["messages"][-1].content
-    
+
     return "I'm sorry, my connection to the stars was interrupted."
