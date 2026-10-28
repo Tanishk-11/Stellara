@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import os
 import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
@@ -9,8 +10,8 @@ from app.core.database import SessionLocal
 from app.core.models import User
 
 # 1. Configuration
-SECRET_KEY = "super-secret-celestic-key-change-in-production"
-ALGORITHM = "HS256"
+SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-celestic-key-change-in-production")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # 2. Standard Bcrypt Password Hashing (Direct, no passlib bugs)

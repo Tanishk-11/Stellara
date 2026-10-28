@@ -32,6 +32,7 @@ def detect_constellation(
     current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
+    file_path = None
     try:
         # STEP 1: Create the file path
         file_path = os.path.join(UPLOAD_DIR, file.filename)
@@ -88,6 +89,6 @@ def detect_constellation(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process image: {str(e)}")
     finally:
-        # NEW: Delete the temporary file if it exists
-        if os.path.exists(file_path): 
+        # Delete the temporary file if it exists
+        if file_path and os.path.exists(file_path): 
             os.remove(file_path)

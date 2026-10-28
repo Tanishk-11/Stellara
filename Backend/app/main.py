@@ -7,10 +7,13 @@ from app.core.database import engine, Base
 # Import your newly built routers!
 from app.api import auth, chat, image, payment
 
-# 1. Tell SQLAlchemy to build the actual tables in PostgreSQL 
-# (It will only create them if they don't already exist)
+# 1. Initialize database tables safely
 print("Building database tables...")
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+    print("Database tables initialized successfully!")
+except Exception as e:
+    print(f"Warning: Could not initialize database tables on startup: {e}")
 
 # 2. Initialize the main FastAPI application
 app = FastAPI(
@@ -28,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers (like our JWT Authorization header)
 )
 
-# 4. Snap the  pieces (routers) onto the main app
+# 4. Snap the pieces (routers) onto the main app
 # The 'prefix' means all routes in auth.py will start with /api/auth (e.g., /api/auth/login)
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/chat", tags=["AI Chat"])

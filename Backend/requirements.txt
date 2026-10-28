@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
+psycopg[binary]
 psycopg2-binary
 pydantic[email]
 python-dotenv
@@ -14,7 +15,6 @@ skyfield
 Pillow
 PyJWT
 python-multipart
-passlib[bcrypt]
 bcrypt
 razorpay
 cloudinary
